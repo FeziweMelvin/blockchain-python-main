@@ -1,102 +1,141 @@
-# Blockchain implementation using Python.
 
-This is a implementation of a basic blockchain structure in python, with all the description, and
-documentation of it's working and things.
+# 🔗 Educational Blockchain Implementation in Python
 
-**NOTE**: It used to be a basic interaction API for finding the hashs, POW and the info. Currently
-it's revamped into a full stack website with dummy payments mining and a better UI.
+<div align="center">
+  <strong>A comprehensive blockchain implementation showcasing core concepts through Python</strong>
+  <br/>
+  <br/>
+  
+  [![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)](https://www.python.org/downloads/)
+  [![Flask](https://img.shields.io/badge/Flask-2.0+-green.svg)](https://flask.palletsprojects.com/)
+  [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+</div>
 
-## Definition, and Representation of Blockchain
+## 📚 Overview
 
-Here is the representation of a transaction in blockchain in Python.
+This project demonstrates a functional blockchain implementation with a modern web interface. Originally developed as a CLI-based hash verification system, it has evolved into a full-stack application featuring simulated mining operations and cryptocurrency transactions.
+
+## 🔍 Core Components
+
+### Block Structure
+Each block in our blockchain contains:
 
 ```python
-block = {
-    'index': 1,
-    'timestamp': 1506057125.900785,
-    'transactions': [
+{
+    "index": 1,
+    "timestamp": 1506057125.900785,
+    "transactions": [
         {
-            'sender': "8527147fe1f5426f9dd545de4b27ee00",
-            'recipient': "a77f5cdfa2934df3954a5c7c7da5df1f",
-            'amount': 5,
+            "sender": "8527147fe1f5426f9dd545de4b27ee00",
+            "recipient": "a77f5cdfa2934df3954a5c7c7da5df1f",
+            "amount": 5,
         }
     ],
-    'proof': 324984774000,
-    'previous_hash': "2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824"
+    "proof": 324984774000,
+    "previous_hash": "2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824"
 }
 ```
 
-Each new block contains within itself, the hash of the previous Block. This is crucial because it’s what
-gives blockchains immutability. If an attacker corrupted an earlier Block in the chain then all subsequent
-blocks will contain incorrect hashes.
+### 💡 Proof of Work (PoW) Implementation
 
-### Creating new Blocks
-
-When our Blockchain is instantiated we'll need to seed it with a genesis block, a block with
-no predecessors. We’ll also need to add a "proof" to our genesis block which is the result of
-mining (or proof of work).
-
-### Understanding Proof of Work
-
-A Proof of Work algorithm (PoW) is how new Blocks are created or mined on the blockchain.
-The goal of PoW is to discover a number which solves a problem. The number must be difficult to
-find but easy to verify computationally speaking by anyone on the network.
-This is the core idea behind Proof of Work.
-
-Let’s decide that the hash of some integer x multiplied by another y must end in 0.
-So, `hash(x * y) = ac23dc...0` And for this simplified example, let’s fix `x = 5`.
-Implementing this in Python:
+Our PoW algorithm demonstrates blockchain mining through a simplified example:
 
 ```python
 from hashlib import sha256
 
+def find_proof_of_work(x):
+    y = 0
+    while sha256(f'{x*y}'.encode()).hexdigest()[-1] != "0":
+        y += 1
+    return y
+
+# Example usage
 x = 5
-y = 0  # Y needs to be calculated
-
-while sha256(f'{x*y}'.encode()).hexdigest()[-1] != "0":
-    y += 1
-
-print(f'The solution is y = {y}')
+solution = find_proof_of_work(x)
+print(f'Solution found: y = {solution}')
 ```
 
-The solution here is `y = 21`. Since, the produced hash ends in `0`:
+### 📡 API Interface
 
-```
-hash(5 * 21) = 1253e9373e...5e3600155e860
-```
-
-In Bitcoin, the Proof of Work algorithm is called **Hashcash**. And it’s not too different from our
-basic example above. It’s the algorithm that miners race to solve in order to create a new block.
-In general, the difficulty is determined by the number of characters searched for in a string.
-The miners are then rewarded for their solution by receiving a coin in a transaction.
-
-The network is able to easily verify their solution.
-
-This is what the request for a transaction will look like. It’s what the user sends to the server:
-
+Example transaction request:
 ```json
 {
-  "sender": "my address",
-  "recipient": "someone else's address",
-  "amount": 5
+    "sender": "wallet_address_1",
+    "recipient": "wallet_address_2",
+    "amount": 5
 }
 ```
 
-## Tech Stack used
+## 🛠️ Technology Stack
 
-- `Flask` - A HTTP Gateway to expose our blockchain structure externally.
-- `Requests` - A medium to check the HTTP Endpoint request and return JSON response.
+- **Backend Framework**: Flask
+- **HTTP Client**: Requests
+- **Database**: SQLite (for transaction storage)
+- **Frontend**: HTML/CSS/JavaScript
+- **Cryptography**: hashlib
 
-## How to run the project?
+## 🚀 Getting Started
 
-- Clone the repo: `git clone https://github.com/janaSunrise/blockchain-python`
-- Install pipenv: `pip3 install pipenv`
-- Make a env with Pipenv: `pipenv sync`
-- Run the servers:
-  - Run the miner server using `python -m frontend`
-  - Run the clients using `python -m client <PORT-HERE>`
+1. **Clone the Repository**
+```bash
+git clone https://github.com/your-username/blockchain-python.git
+cd blockchain-python
+```
 
-You can visit the site, play with the server, client and more, OR Use postman to Play and Mess with the
-HTTP and JSON responses!
+2. **Set Up Environment**
+```bash
+pip install pipenv
+pipenv install
+pipenv shell
+```
 
-<div align="center">Made by Sunrit Jana with ❤️</div>
+3. **Launch Servers**
+```bash
+# Start mining server
+python -m frontend
+
+# Start client (in new terminal)
+python -m client <PORT>
+```
+
+## 🌐 Network Architecture
+
+```mermaid
+graph LR
+    A[Mining Node] -->|Block Production| B[Network]
+    B -->|Verification| C[Client Nodes]
+    C -->|Transactions| B
+```
+
+## 🔧 Development Features
+
+- ✨ Genesis block generation
+- 🔒 Secure hashing algorithms
+- ⛏️ Mining simulation
+- 💰 Transaction management
+- 🌐 Peer-to-peer networking basics
+
+## 📝 Testing
+
+Run the test suite:
+```bash
+python -m pytest tests/
+```
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit changes (`git commit -m 'Add AmazingFeature'`)
+4. Push to branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## 📜 License
+
+Distributed under the MIT License. See `LICENSE` for more information.
+
+---
+
+<div align="center">
+  <sub>Built with ❤️ by Your Name</sub>
+</div>
